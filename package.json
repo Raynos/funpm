@@ -20,9 +20,11 @@
     "lb_pool": "1.2.0",
     "minimist": "1.1.1",
     "process": "0.11.0",
-    "semver": "4.3.3"
+    "semver": "4.3.3",
+    "tar": "2.1.0"
   },
   "devDependencies": {
+    "collect-parallel": "1.0.1",
     "coveralls": "^2.10.0",
     "fixtures-fs": "^2.0.0",
     "istanbul": "^0.3.5",
