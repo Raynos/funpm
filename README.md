@@ -17,9 +17,45 @@ very few features. Designed for performance and correctness.
 
 Is compatible with the public NPM servers
 
+## Commands
+
+### install
+
+`funpm install` will install from the current `funpm-shrinkwrap.json`
+file in the current working directory.
+
+The suggested workflows are:
+
+ - `git clone a-project` and run `funpm install` to download
+    its dependencies
+ - `git checkout a-branch` and run `funpm install` to download
+    the dependencies for the branch
+
+If you want to install new modules; use `funpm update` instead.
+
+### update
+
+`funpm update` will update `node_modules`, `package.json` and
+`funpm-shrinkwrap.json` with a new module.
+
+You run `funpm update module@version` to update a single module.
+This will install the module at the version you asked and update
+the `package.json` and `funpm-shrinkwrap.json` file.
+
+### ls
+
+`funpm ls` will show the current logical tree for your
+node_modules on disk and tell you if it agrees or disagrees with
+the `funpm-shrinkwrap.json` file.
+
+### shrinkwrap
+
+There is no `funpm shrinkwrap` command; It is build into `update`;
+Each time you update a module, we update the shrinkwrap file.
+
 ## Installation
 
-`npm install funpm`
+`npm install funpm -g`
 
 ## Tests
 
