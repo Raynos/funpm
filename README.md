@@ -38,6 +38,9 @@ If you want to install new modules; use `funpm update` instead.
 `funpm update` will update `node_modules`, `package.json` and
 `funpm-shrinkwrap.json` with a new module.
 
+It will do a pre-flight `npm ls` to ensure that the tree is
+in a good shape before doing any mutations.
+
 You run `funpm update module@version` to update a single module.
 This will install the module at the version you asked and update
 the `package.json` and `funpm-shrinkwrap.json` file.
