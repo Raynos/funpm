@@ -11,6 +11,9 @@
     "url": "https://github.com/Raynos/funpm/issues",
     "email": "raynos2@gmail.com"
   },
+  "bin": {
+    "funpm": "./bin/funpm.js"
+  },
   "contributors": [
     {
       "name": "Raynos"
