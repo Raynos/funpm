@@ -9,15 +9,13 @@ var TarballRepository = require('./tarball-repository.js');
 
 module.exports = NodeModulesInstaller;
 
-function NodeModulesInstaller(prefix) {
-    this.prefix = prefix;
-
+function NodeModulesInstaller() {
     this.registryClient = new RegistryClient();
     this.tarballRepository = new TarballRepository();
 }
 
 NodeModulesInstaller.prototype.installModule =
-function installModule(moduleName, versionish, cb) {
+function installModule(prefix, moduleName, versionish, cb) {
     var self = this;
 
     self.registryClient.resolveVersionish(
@@ -37,7 +35,7 @@ function installModule(moduleName, versionish, cb) {
             return cb(err);
         }
 
-        var location = path.join(self.prefix, 'node_modules', moduleName);
+        var location = path.join(prefix, 'node_modules', moduleName);
         self.installTarballStream(response, location, onInstalled);
     }
 

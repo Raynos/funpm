@@ -30,7 +30,9 @@ Commands.prototype.update = function update(cb) {
     var moduleName = parts[0];
     var versionish = parts[1];
 
-    self.installer.installModule(moduleName, versionish, cb);
+    self.installer.installModule(
+        self.prefix, moduleName, versionish, cb
+    );
 };
 
 Commands.prototype.ls = function ls(cb) {
