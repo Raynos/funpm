@@ -17,7 +17,7 @@ test('updating error@7', fixtures(__dirname, {
 }, function t(assert) {
     var prefix = path.join(__dirname, 'error-test');
     var errorDir = path.join(prefix, 'node_modules', 'error');
-    var client = funpm.exec([
+    funpm.exec([
         'update', '--prefix', prefix, 'error@7'
     ], onUpdate);
 
@@ -43,7 +43,6 @@ test('updating error@7', fixtures(__dirname, {
         var code = String(results.code.value);
         assert.ok(code.indexOf('function TypedError') !== -1);
 
-        client.destroy();
         assert.end();
     }
 }));

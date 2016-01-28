@@ -70,9 +70,3 @@ Commands.prototype.update = function update(cb) {
 Commands.prototype.ls = function ls(cb) {
     cb(new Error('funpm ls is not implemented'));
 };
-
-Commands.prototype.destroy = function destroy() {
-    var self = this;
-
-    self.registryClient.destroy();
-};

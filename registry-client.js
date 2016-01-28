@@ -1,31 +1,12 @@
 'use strict';
 
 var http = require('http');
-var LBPool = require('lb_pool').Pool;
 var semver = require('semver');
 
 module.exports = RegistryClient;
 
 function RegistryClient() {
-    this.npmPool = new LBPool(http, [
-        'registry.npmjs.org:80',
-        'registry.npmjs.org:80',
-        'registry.npmjs.org:80'
-    ], {
-        maxPending: 300,
-        maxSockets: 2,
-        resolution: 500,
-        timeout: 5000,
-        keepAlive: false,
-        ping: '/'
-    });
 }
-
-RegistryClient.prototype.destroy = function destroy() {
-    var self = this;
-
-    self.npmPool.close();
-};
 
 RegistryClient.prototype.resolveVersionish =
 function resolveVersionish(moduleName, versionish, cb) {
@@ -72,15 +53,25 @@ function resolveVersionish(moduleName, versionish, cb) {
 
 RegistryClient.prototype.getPackage =
 function getPackage(moduleName, cb) {
-    var self = this;
+    var uri = 'http://registry.npmjs.org/' + moduleName;
+    var body = '';
 
-    self.npmPool.get('/' + moduleName, onResponse);
+    http.get(uri, onResponse);
 
-    function onResponse(err, resp, body) {
-        if (err) {
-            return cb(err);
+    function onResponse(resp) {
+        if (resp.statusCode !== 200) {
+            return cb(new Error('failed fetch: ' + resp.statusCode));
         }
 
+        resp.on('data', onData);
+        resp.on('end', onEnd);
+    }
+
+    function onData(buf) {
+        body += buf.toString();
+    }
+
+    function onEnd() {
         cb(null, JSON.parse(body));
     }
 };

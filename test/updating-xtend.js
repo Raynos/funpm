@@ -17,7 +17,7 @@ test('updating xtend@latest', fixtures(__dirname, {
 }, function t(assert) {
     var prefix = path.join(__dirname, 'xtend-test');
     var xtendDir = path.join(prefix, 'node_modules', 'xtend');
-    var client = funpm.exec([
+    funpm.exec([
         'update', '--prefix', prefix, 'xtend@latest'
     ], onUpdate);
 
@@ -43,7 +43,6 @@ test('updating xtend@latest', fixtures(__dirname, {
         var code = String(results.code.value);
         assert.ok(code.indexOf('function extend') !== -1);
 
-        client.destroy();
         assert.end();
     }
 }));
