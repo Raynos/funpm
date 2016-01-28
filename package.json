@@ -17,7 +17,6 @@
     }
   ],
   "dependencies": {
-    "lb_pool": "1.2.0",
     "semver": "4.3.3",
     "tar": "2.1.0"
   },
