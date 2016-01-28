@@ -15,8 +15,10 @@ if (require.main === module) {
 }
 
 function onError(err) {
-    console.error(err.message);
-    process.exit(1);
+    if (err) {
+        console.error(err.message);
+        process.exit(1);
+    }
 }
 
 function parseArgs(argv) {

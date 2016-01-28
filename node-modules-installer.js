@@ -16,7 +16,7 @@ function NodeModulesInstaller() {
 }
 
 NodeModulesInstaller.prototype.installModule =
-function installModule(prefix, moduleName, versionish, cb) {
+function installModule(prefix, moduleName, versionish, seen, cb) {
     var self = this;
 
     self.unpackModule(prefix, moduleName, versionish, onUnpackaged);
@@ -27,7 +27,7 @@ function installModule(prefix, moduleName, versionish, cb) {
         }
 
         var location = path.join(prefix, 'node_modules', moduleName);
-        self.installAllModules(location, pkg, cb);
+        self.installAllModules(location, pkg, seen, cb);
     }
 };
 
@@ -44,12 +44,24 @@ function installProject(prefix, cb) {
         }
 
         var pkg = JSON.parse(content);
-        self.installAllModules(prefix, pkg, cb);
+        var devDependencies = pkg.devDependencies || null;
+        if (devDependencies) {
+            if (!pkg.dependencies) {
+                pkg.dependencies = {};
+            }
+
+            var keys = Object.keys(devDependencies);
+            for (var i = 0; i < keys.length; i++) {
+                pkg.dependencies[keys[i]] = devDependencies[keys[i]];
+            }
+        }
+
+        self.installAllModules(prefix, pkg, [], cb);
     }
 };
 
 NodeModulesInstaller.prototype.installAllModules =
-function installAllModules(prefix, pkg, cb) {
+function installAllModules(prefix, pkg, seen, cb) {
     var self = this;
 
     var deps = pkg.dependencies ? Object.keys(pkg.dependencies) : null;
@@ -62,7 +74,9 @@ function installAllModules(prefix, pkg, cb) {
         var moduleName = deps[i];
         var versionish = pkg.dependencies[moduleName];
 
-        self.installModule(prefix, moduleName, versionish, onInstalled);
+        self.installModule(
+            prefix, moduleName, versionish, seen, onInstalled
+        );
     }
 
     function onInstalled(err) {

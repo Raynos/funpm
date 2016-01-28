@@ -33,7 +33,7 @@ Commands.prototype.update = function update(cb) {
     var versionish = parts[1];
 
     self.installer.installModule(
-        self.prefix, moduleName, versionish, cb
+        self.prefix, moduleName, versionish, [], cb
     );
 };
 

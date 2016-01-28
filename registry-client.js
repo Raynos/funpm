@@ -2,6 +2,7 @@
 
 var http = require('http');
 var semver = require('semver');
+var console = require('console');
 
 module.exports = RegistryClient;
 
@@ -55,7 +56,9 @@ function getPackage(moduleName, cb) {
     var uri = 'http://registry.npmjs.org/' + moduleName;
     var body = '';
 
-    http.get(uri, onResponse);
+    console.log('funpm http request GET ' + uri);
+    var req = http.get(uri, onResponse);
+    req.on('error', cb);
 
     function onResponse(resp) {
         if (resp.statusCode !== 200) {
