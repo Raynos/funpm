@@ -7,13 +7,7 @@ var semver = require('semver');
 module.exports = RegistryClient;
 
 function RegistryClient() {
-    if (!(this instanceof RegistryClient)) {
-        return new RegistryClient();
-    }
-
-    var self = this;
-
-    self.npmPool = new LBPool(http, [
+    this.npmPool = new LBPool(http, [
         'registry.npmjs.org:80',
         'registry.npmjs.org:80',
         'registry.npmjs.org:80'

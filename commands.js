@@ -11,18 +11,12 @@ var NodeModulesInstaller = require('./node-modules-installer.js');
 module.exports = Commands;
 
 function Commands(argv) {
-    if (!(this instanceof Commands)) {
-        return new Commands(argv);
-    }
+    this.argv = argv;
 
-    var self = this;
-
-    self.argv = argv;
-
-    self.prefix = argv.prefix || process.cwd();
-    self.registryClient = RegistryClient();
-    self.tarballRepository = TarballRepository();
-    self.installer = NodeModulesInstaller();
+    this.prefix = argv.prefix || process.cwd();
+    this.registryClient = new RegistryClient();
+    this.tarballRepository = new TarballRepository();
+    this.installer = new NodeModulesInstaller();
 }
 
 Commands.prototype.install = function install(cb) {

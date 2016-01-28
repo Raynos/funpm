@@ -6,9 +6,6 @@ var url = require('url');
 module.exports = TarballRepository;
 
 function TarballRepository() {
-    if (!(this instanceof TarballRepository)) {
-        return new TarballRepository();
-    }
 }
 
 TarballRepository.prototype.fetchTarball =
@@ -26,7 +23,7 @@ function fetchTarball(tarballUrl, callback) {
     req.on('error', function onError(err) {
         if (!called) {
             called = true;
-            callback(err);
+            return callback(err);
         }
     });
 
@@ -35,7 +32,7 @@ function fetchTarball(tarballUrl, callback) {
     function onResponse(response) {
         if (!called) {
             called = true;
-            callback(null, response);
+            return callback(null, response);
         }
     }
 };

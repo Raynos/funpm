@@ -6,9 +6,6 @@ var tar = require('tar');
 module.exports = NodeModulesInstaller;
 
 function NodeModulesInstaller() {
-    if (!(this instanceof NodeModulesInstaller)) {
-        return new NodeModulesInstaller();
-    }
 }
 
 NodeModulesInstaller.prototype.installTarballStream =
