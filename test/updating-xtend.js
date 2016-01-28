@@ -10,9 +10,9 @@ var funpm = require('../bin/funpm.js');
 
 test('updating xtend@latest', fixtures(__dirname, {
     'xtend-test': {
-        'package.json': {
+        'package.json': JSON.stringify({
             'dependencies': {}
-        }
+        })
     }
 }, function t(assert) {
     var prefix = path.join(__dirname, 'xtend-test');

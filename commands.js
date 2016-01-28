@@ -15,7 +15,9 @@ function Commands(argv) {
 }
 
 Commands.prototype.install = function install(cb) {
-    cb(new Error('funpm install is not implemented'));
+    var self = this;
+
+    self.installer.installProject(self.prefix, cb);
 };
 
 Commands.prototype.update = function update(cb) {

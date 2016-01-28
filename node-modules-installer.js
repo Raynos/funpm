@@ -3,6 +3,7 @@
 var zlib = require('zlib');
 var tar = require('tar');
 var path = require('path');
+var fs = require('fs');
 
 var RegistryClient = require('./registry-client.js');
 var TarballRepository = require('./tarball-repository.js');
@@ -27,6 +28,23 @@ function installModule(prefix, moduleName, versionish, cb) {
 
         var location = path.join(prefix, 'node_modules', moduleName);
         self.installAllModules(location, pkg, cb);
+    }
+};
+
+NodeModulesInstaller.prototype.installProject =
+function installProject(prefix, cb) {
+    var self = this;
+
+    var packageFile = path.join(prefix, 'package.json');
+    fs.readFile(packageFile, 'utf8', onFile);
+
+    function onFile(err, content) {
+        if (err) {
+            return cb(err);
+        }
+
+        var pkg = JSON.parse(content);
+        self.installAllModules(prefix, pkg, cb);
     }
 };
 
