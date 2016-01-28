@@ -20,12 +20,42 @@ function installModule(prefix, moduleName, versionish, cb) {
 
     self.unpackModule(prefix, moduleName, versionish, onUnpackaged);
 
-    function onUnpackaged(err) {
+    function onUnpackaged(err, pkg) {
         if (err) {
             return cb(err);
         }
 
-        cb(null);
+        var location = path.join(prefix, 'node_modules', moduleName);
+        self.installAllModules(location, pkg, cb);
+    }
+};
+
+NodeModulesInstaller.prototype.installAllModules =
+function installAllModules(prefix, pkg, cb) {
+    var self = this;
+
+    var deps = pkg.dependencies ? Object.keys(pkg.dependencies) : null;
+    if (!deps || deps.length === 0) {
+        return cb(null);
+    }
+
+    var counter = deps.length;
+    for (var i = 0; i < deps.length; i++) {
+        var moduleName = deps[i];
+        var versionish = pkg.dependencies[moduleName];
+
+        self.installModule(prefix, moduleName, versionish, onInstalled);
+    }
+
+    function onInstalled(err) {
+        if (err && counter > 0) {
+            counter = 0;
+            return cb(err);
+        }
+
+        if (--counter === 0) {
+            return cb(null);
+        }
     }
 };
 
@@ -33,16 +63,20 @@ NodeModulesInstaller.prototype.unpackModule =
 function unpackModule(prefix, moduleName, versionish, cb) {
     var self = this;
 
+    var _meta = null;
+
     self.registryClient.resolveVersionish(
         moduleName, versionish, onVersion
     );
 
-    function onVersion(err, tarball) {
+    function onVersion(err, meta) {
         if (err) {
             return cb(err);
         }
 
-        self.tarballRepository.fetchTarball(tarball, onTarball);
+        _meta = meta;
+
+        self.tarballRepository.fetchTarball(_meta.dist.tarball, onTarball);
     }
 
     function onTarball(err, response) {
@@ -51,7 +85,15 @@ function unpackModule(prefix, moduleName, versionish, cb) {
         }
 
         var location = path.join(prefix, 'node_modules', moduleName);
-        self.installTarballStream(response, location, cb);
+        self.installTarballStream(response, location, onInstalled);
+    }
+
+    function onInstalled(err) {
+        if (err) {
+            return cb(err);
+        }
+
+        cb(null, _meta);
     }
 };
 

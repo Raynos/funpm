@@ -45,9 +45,8 @@ function resolveVersionish(moduleName, versionish, cb) {
         }
 
         var meta = pkg.versions[version];
-        var tarball = meta.dist.tarball;
 
-        cb(null, tarball);
+        cb(null, meta);
     }
 };
 
