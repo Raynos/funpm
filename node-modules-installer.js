@@ -18,6 +18,21 @@ NodeModulesInstaller.prototype.installModule =
 function installModule(prefix, moduleName, versionish, cb) {
     var self = this;
 
+    self.unpackModule(prefix, moduleName, versionish, onUnpackaged);
+
+    function onUnpackaged(err) {
+        if (err) {
+            return cb(err);
+        }
+
+        cb(null);
+    }
+};
+
+NodeModulesInstaller.prototype.unpackModule =
+function unpackModule(prefix, moduleName, versionish, cb) {
+    var self = this;
+
     self.registryClient.resolveVersionish(
         moduleName, versionish, onVersion
     );
@@ -36,15 +51,7 @@ function installModule(prefix, moduleName, versionish, cb) {
         }
 
         var location = path.join(prefix, 'node_modules', moduleName);
-        self.installTarballStream(response, location, onInstalled);
-    }
-
-    function onInstalled(err) {
-        if (err) {
-            return cb(err);
-        }
-
-        cb(null);
+        self.installTarballStream(response, location, cb);
     }
 };
 
