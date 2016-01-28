@@ -1,8 +1,7 @@
 'use strict';
 
-var process = require('process');
+var process = global.process;
 var console = require('console');
-var minimist = require('minimist');
 
 var Commands = require('../commands.js');
 
@@ -11,7 +10,7 @@ main.exec = exec;
 module.exports = main;
 
 if (require.main === module) {
-    main(minimist(process.argv.slice(2)), onError);
+    main(process.argv.slice(2), onError);
 }
 
 function onError(err) {
@@ -19,10 +18,33 @@ function onError(err) {
     process.exit(1);
 }
 
+function parseArgs(argv) {
+    var opts = {
+        _: [],
+        prefix: null
+    };
+
+    do {
+        var token = argv.shift();
+        switch (token) {
+            case '--prefix':
+                opts.prefix = argv.shift();
+                break;
+
+            default:
+                opts._.push(token);
+                break;
+        }
+    } while (argv.length > 0);
+
+    return opts;
+}
+
 function main(argv, cb) {
     /*eslint no-console: 0, no-process-exit: 0*/
-    var command = argv._[0];
-    var commands = new Commands(argv);
+    var opts = parseArgs(argv);
+    var command = opts._[0];
+    var commands = new Commands(opts);
 
     if (command === 'install') {
         commands.install(cb);
@@ -31,7 +53,7 @@ function main(argv, cb) {
     } else if (command === 'ls') {
         commands.ls(cb);
     } else {
-        cb(new Error('unknown command ' + command));
+        return cb(new Error('unknown command ' + command));
     }
 
     return commands;
@@ -42,5 +64,5 @@ function exec(parts, cb) {
         parts = parts.split(' ');
     }
 
-    return main(minimist(parts), cb);
+    return main(parts, cb);
 }

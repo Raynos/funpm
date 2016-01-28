@@ -2,7 +2,7 @@
 
 var assert = require('assert');
 var path = require('path');
-var process = require('process');
+var process = global.process;
 
 var RegistryClient = require('./registry-client.js');
 var TarballRepository = require('./tarball-repository.js');

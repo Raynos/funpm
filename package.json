@@ -18,8 +18,6 @@
   ],
   "dependencies": {
     "lb_pool": "1.2.0",
-    "minimist": "1.1.1",
-    "process": "0.11.0",
     "semver": "4.3.3",
     "tar": "2.1.0"
   },
@@ -30,7 +28,9 @@
     "istanbul": "^0.3.5",
     "itape": "1.7.1",
     "leaked-handles": "5.2.0",
-    "lint-trap": "^1.0.0",
+    "eslint": "1.8.0",
+    "eslint-config-perf-standard": "^2.1.0",
+    "eslint-plugin-perf-standard": "^1.0.2",
     "opn": "^1.0.1",
     "pre-commit": "0.0.11",
     "tap-spec": "^2.1.1",
@@ -45,7 +45,7 @@
   "scripts": {
     "test": "npm run jshint -s && npm run cover -s",
     "unit-test": "node test/index.js | tap-spec",
-    "jshint": "lint-trap .",
+    "jshint": "eslint $(git ls-files | grep '.js$')",
     "cover": "istanbul cover --report html --print detail -- test/index.js && npm run check-cover -s",
     "check-cover": "istanbul check-coverage --branches=100 --lines=100 --functions=100",
     "view-cover": "opn ./coverage/index.html",

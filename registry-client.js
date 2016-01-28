@@ -63,7 +63,10 @@ function resolveVersionish(moduleName, versionish, cb) {
         }
 
         if (rangeExpression) {
-            cb(new Error('resolving range expressions not implemented'));
+            var validVersions = Object.keys(pkg.versions);
+            version = semver.maxSatisfying(
+                validVersions, rangeExpression
+            );
         }
 
         var meta = pkg.versions[version];
